@@ -1,4 +1,4 @@
-# Synopsis of dataPull python script
+# dataPull python script walkthrough
 
 This Python script automates the process of fetching daily call data metrics from a ClickHouse database and then exporting these metrics as a CSV file to an AWS S3 bucket. 
 
