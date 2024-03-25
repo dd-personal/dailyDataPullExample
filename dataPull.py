@@ -50,7 +50,7 @@ df = pd.DataFrame(data_for_df, columns=column_names)
 current_date = datetime.now().strftime('%Y-%m-%d')
 
 # Convert DataFrame to CSV format
-csv_buffer = StringIO()
+csv_buffer = StringIO() #store csv data body in memory so we don't have to write it to a file
 df.to_csv(csv_buffer, index=False)
 
 # Upload CSV to S3
