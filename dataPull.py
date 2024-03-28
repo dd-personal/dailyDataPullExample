@@ -14,7 +14,7 @@ clickhouse_password = os.environ['CLICKHOUSE_PASSWORD']
 aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID']
 aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
 s3_bucket_name = 'crestahomework'
-s3_folder = 'daily_exports/'
+s3_folder = 'daily_exports'
 
 
 # Connect to Clickhouse
@@ -43,18 +43,20 @@ for col in data[1]:
     column_name = col[0]
     column_names.append(column_name)
 
-#create a DataFrame with extracted data
+# Create a DataFrame with extracted data
 df = pd.DataFrame(data_for_df, columns=column_names)
 
 # Current date for file naming
 current_date = datetime.now().strftime('%Y-%m-%d')
 
 # Convert DataFrame to CSV format
-csv_buffer = StringIO() #store csv data body in memory so we don't have to write it to a file
+csv_buffer = StringIO()  # Store csv data body in memory so we don't have to write it to a file
+
 df.to_csv(csv_buffer, index=False)
 
 # Upload CSV to S3
 s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
-s3_client.put_object(Bucket=s3_bucket_name, Key=f'{s3_folder}agent_calls_{current_date}.csv', Body=csv_buffer.getvalue())
+upload_path = os.path.join(s3_folder, f'agent_calls_{current_date}.csv')
+s3_client.put_object(Bucket=s3_bucket_name, Key=upload_path, Body=csv_buffer.getvalue())
 
-print(f"Data uploaded successfully -- {current_date}")
+print(f"Data uploaded successfully to {upload_path} -- {current_date}")
